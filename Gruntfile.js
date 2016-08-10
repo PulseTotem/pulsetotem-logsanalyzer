@@ -14,6 +14,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-symlink');
     grunt.loadNpmTasks('grunt-mocha-istanbul');
     grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-bumpup');
 
 
 	// tasks
@@ -200,7 +201,13 @@ module.exports = function (grunt) {
             dist: ['dist/'],
             doc: ['doc'],
             test: ['build/tests/Test.js']
-        }
+        },
+// ---------------------------------------------
+
+// ---------------------------------------------
+//                                    bump task
+// ---------------------------------------------
+        bumpup: 'package.json'
 // ---------------------------------------------
     });
 
