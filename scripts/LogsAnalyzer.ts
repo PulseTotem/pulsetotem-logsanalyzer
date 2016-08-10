@@ -6,6 +6,7 @@
 /// <reference path="../t6s-core/core-backend/scripts/Logger.ts" />
 /// <reference path="./database/MongoDBConnection.ts" />
 /// <reference path="./mq/MessageQueueConnection.ts" />
+/// <reference path="./analyzers/SaveAnalyzer.ts" />
 
 /**
  * Represents PulseTotem's Logs Analyzer.
@@ -14,6 +15,15 @@
  * @extends Server
  */
 class LogsAnalyzer extends Server {
+
+	/**
+	 * Save Analyzer.
+	 *
+	 * @property saveAnalyzer
+	 * @type SaveAnalyzer
+	 * @static
+	 */
+	private saveAnalyzer : SaveAnalyzer;
 
 	/**
 	 * Constructor.
@@ -37,6 +47,9 @@ class LogsAnalyzer extends Server {
 
 		var successMQConnection = function() {
 			MessageQueueConnection.consumeMessages(function(msg : string) {
+
+				self.initAnalyzers();
+
 				self.analyzeMessage(msg);
 			});
 		};
@@ -66,6 +79,17 @@ class LogsAnalyzer extends Server {
 	}
 
 	/**
+	 * Init all analyzers.
+	 *
+	 * @method initAnalyzers
+	 */
+	initAnalyzers() {
+		var self = this;
+
+		this.saveAnalyzer = new SaveAnalyzer();
+	}
+
+	/**
 	 * Analyze message from MQ.
 	 *
 	 * @method analyzeMessage
@@ -74,7 +98,14 @@ class LogsAnalyzer extends Server {
 	analyzeMessage(message : string) {
 		var self = this;
 
-		console.log(JSON.parse(message));
+		var jsonMessage : any = JSON.parse(message);
+
+		this.saveAnalyzer.performJob(jsonMessage, function(input) {
+			//Nothing to do.
+			console.log(input);
+		}, function() {
+			console.debug("SaveAnalyzer - FAIL : Unable to save input in database.");
+		});
 	}
 }
 
