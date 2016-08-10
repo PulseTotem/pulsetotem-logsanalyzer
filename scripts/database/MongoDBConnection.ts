@@ -127,6 +127,7 @@ class MongoDBConnection {
     static init(callback : Function) {
 		if (MongoDBConnection.collection != null) {
 			callback();
+			return;
 		}
 
 		MongoDBConnection.retrieveConnectionInformation();
@@ -138,7 +139,7 @@ class MongoDBConnection {
 		mongoUrl += MongoDBConnection.host+":"+MongoDBConnection.port+"/"+MongoDBConnection.database;
 
 		MongoClient.connect(mongoUrl, function(err, db) {
-			if (err != null) {
+			if (err) {
 				Logger.error("Error while connecting database :", {"error" : err});
 				return;
 			}

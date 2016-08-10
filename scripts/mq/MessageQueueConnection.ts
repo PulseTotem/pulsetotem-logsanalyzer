@@ -66,13 +66,13 @@ class MessageQueueConnection {
 		}
 
 		amqplib.connect('amqp://localhost', function(err, conn) {
-			if (err != null) {
+			if (err) {
 				Logger.error("Error while connecting message queue server :", {"error" : err});
 				return;
 			}
 
 			conn.createChannel(function(errCh, ch) {
-				if (errCh != null) {
+				if (errCh) {
 					Logger.error("Error while creating channel :", {"error" : errCh});
 					return;
 				}
@@ -84,7 +84,7 @@ class MessageQueueConnection {
 
 				//Manage queue, connecting to exchange
 				MessageQueueConnection.channel.assertQueue('', {exclusive: true}, function(errQ, q) {
-					if (errQ != null) {
+					if (errQ) {
 						Logger.error("Error while creating queue :", {"error" : errQ});
 						return;
 					}
