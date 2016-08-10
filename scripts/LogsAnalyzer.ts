@@ -44,10 +44,25 @@ class LogsAnalyzer extends Server {
 		var successDBConnection = function () {
 			Logger.debug("Success to connect to Database.");
 
+			self.addIndexes();
+
 			MessageQueueConnection.init(successMQConnection);
 		};
 
 		MongoDBConnection.init(successDBConnection);
+	}
+
+	/**
+	 * Add some indexes to MongoDB collection.
+	 *
+	 * @method addIndexes
+	 */
+	addIndexes() {
+		var self = this;
+
+		MongoDBConnection.getCollection().createIndex( { "meta.logDetails.from": 1 } );
+		MongoDBConnection.getCollection().createIndex( { "meta.logDetails.timestamp": 1 } );
+		MongoDBConnection.getCollection().createIndex( { "meta.logDetails.level": 1 } );
 	}
 
 	/**
