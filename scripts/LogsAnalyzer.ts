@@ -5,6 +5,7 @@
 /// <reference path="../t6s-core/core-backend/scripts/server/Server.ts" />
 /// <reference path="../t6s-core/core-backend/scripts/Logger.ts" />
 /// <reference path="./database/MongoDBConnection.ts" />
+/// <reference path="./mq/MessageQueueConnection.ts" />
 
 /**
  * Represents PulseTotem's Logs Analyzer.
@@ -34,11 +35,31 @@ class LogsAnalyzer extends Server {
 	init() {
 		var self = this;
 
-		var success = function () {
-			Logger.debug("Success to connect to Database.")
+		var successMQConnection = function() {
+			MessageQueueConnection.consumeMessages(function(msg : string) {
+				self.analyzeMessage(msg);
+			});
 		};
 
-		MongoDBConnection.init(success);
+		var successDBConnection = function () {
+			Logger.debug("Success to connect to Database.");
+
+			MessageQueueConnection.init(successMQConnection);
+		};
+
+		MongoDBConnection.init(successDBConnection);
+	}
+
+	/**
+	 * Analyze message from MQ.
+	 *
+	 * @method analyzeMessage
+	 * @param {string} message - Message to analyze.
+	 */
+	analyzeMessage(message : string) {
+		var self = this;
+
+		console.log(JSON.parse(message));
 	}
 }
 
