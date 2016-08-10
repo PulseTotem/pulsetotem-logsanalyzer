@@ -38,8 +38,6 @@ class SaveAnalyzer implements Analyzer {
 				return;
 			}
 
-			console.log(result);
-
 			input["_id"] = result.insertedId;
 
 			successCB(input)
