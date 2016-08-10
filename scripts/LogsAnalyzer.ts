@@ -101,8 +101,7 @@ class LogsAnalyzer extends Server {
 		var jsonMessage : any = JSON.parse(message);
 
 		this.saveAnalyzer.performJob(jsonMessage, function(input) {
-			//Nothing to do.
-			console.log(input);
+			//Go to next analyzer, but from now, nothing to do...
 		}, function() {
 			console.debug("SaveAnalyzer - FAIL : Unable to save input in database.");
 		});
