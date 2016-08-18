@@ -46,10 +46,9 @@ class LogsAnalyzer extends Server {
 		var self = this;
 
 		var successMQConnection = function() {
+			self.initAnalyzers();
+
 			MessageQueueConnection.consumeMessages(function(msg : string) {
-
-				self.initAnalyzers();
-
 				self.analyzeMessage(msg);
 			});
 		};
